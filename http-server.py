@@ -43,11 +43,17 @@ def create_http_response(method, source, status_code, client_headers_and_body_by
     source = repr(source).encode()
     status_code = repr(status_code).encode()
 
-    http_response = (
-            b"HTTP/1.0 200 OK\r\n"
+    body = (
             b"Request Method: " + method + b"\r\n"
             b"Request Source: " + source + b"\r\n"
-            b"Response Status: " + status_code + b" " + reason_phrase.encode() + b"\r\n" + client_headers_and_body_bytes
+            b"Response Status: " + status_code + b" " + reason_phrase.encode() + b"\r\n" +
+            client_headers_and_body_bytes
+    )
+    body_length = repr(len(body)).encode()
+
+    http_response = (
+            b"HTTP/1.0 200 OK\r\n"
+            b"Content-Length: " + body_length + END_OF_HEADER + body
     )
 
     print(http_response)
